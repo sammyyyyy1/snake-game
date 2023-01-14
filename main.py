@@ -52,27 +52,27 @@ def play_game():
         check_wall_collision(snake_head)
     # After game is false
     try_again.write("Press space to try again", align="center", font=('Arial', 24, 'bold'))
-    if not game:
-        screen.onkey(key="space", fun=reset_game)
+    screen.onkey(key="space", fun=reset_game)
 
 # Reset game
 def reset_game():
     global game, high_score, score, snake, food
-    # Reset objects and variables
-    game = True
-    snake.snake_delete()
-    snake = Snake()
-    food.new_location()
+    if not game:
+        # Reset objects and variables
+        game = True
+        snake.snake_delete()
+        snake = Snake()
+        food.new_location()
 
-    # Reset score
-    score = 0
-    show_score.clear()
-    show_score.write(f"Score: {score}", align="center", font=('Arial', 24, 'bold'))
-    show_high_score.clear()
-    show_high_score.write(f"High Score: {high_score}", align="center", font=('Arial', 24, 'bold'))
-    try_again.clear()
+        # Reset score
+        score = 0
+        show_score.clear()
+        show_score.write(f"Score: {score}", align="center", font=('Arial', 24, 'bold'))
+        show_high_score.clear()
+        show_high_score.write(f"High Score: {high_score}", align="center", font=('Arial', 24, 'bold'))
+        try_again.clear()
 
-    play_game()
+        play_game()
 
 # Check food collision
 def check_food_collision(snake_head):
