@@ -11,19 +11,21 @@ screen.title("snake!")
 screen.tracer(0)
 game = True
 score = 0
-high_score = 0
+
+with open("data.txt", mode="r") as data:
+    high_score = int(data.read())
+
+
 show_score = Turtle()
 show_score.penup()
 show_score.hideturtle()
 show_score.color("white")
 show_score.goto(x=0, y=250)
-show_score.write(f"Score: {score}", align="center", font=('Arial', 24, 'bold'))
 show_high_score = Turtle()
 show_high_score.penup()
 show_high_score.hideturtle()
 show_high_score.color("white")
 show_high_score.goto(x=0, y=-280)
-show_high_score.write(f"High Score: {high_score}", align="center", font=('Arial', 24, 'bold'))
 try_again = Turtle()
 try_again.penup()
 try_again.hideturtle()
@@ -33,6 +35,14 @@ snake = Snake()
 food = Food()
 
 
+def scoreboard():
+    with open("data.txt") as data:
+        high_score_data = int(data.read())
+        show_score.clear()
+        show_score.write(f"Score: {score}", align="center", font=('Arial', 24, 'bold'))
+        show_high_score.clear()
+        show_high_score.write(f"High Score: {high_score_data}", align="center", font=('Arial', 24, 'bold'))
+
 def play_game():
     while game:
         screen.listen()
@@ -41,6 +51,7 @@ def play_game():
         screen.onkey(key="s", fun=snake.move_down)
         screen.onkey(key="d", fun=snake.move_right)
         screen.update()
+        scoreboard()
         snake.move()
         # Add delay so snake does not update infinitely fast
         time.sleep(0.1)
@@ -66,12 +77,8 @@ def reset_game():
 
         # Reset score
         score = 0
-        show_score.clear()
-        show_score.write(f"Score: {score}", align="center", font=('Arial', 24, 'bold'))
-        show_high_score.clear()
-        show_high_score.write(f"High Score: {high_score}", align="center", font=('Arial', 24, 'bold'))
+        scoreboard()
         try_again.clear()
-
         play_game()
 
 # Check food collision
@@ -84,10 +91,10 @@ def check_food_collision(snake_head):
         global score, high_score
         score += 1
         high_score = max(high_score, score)
-        show_score.clear()
-        show_score.write(f"Score: {score}", align="center", font=('Arial', 24, 'bold'))
-        show_high_score.clear()
-        show_high_score.write(f"High Score: {high_score}", align="center", font=('Arial', 24, 'bold'))
+
+        with open("data.txt", mode="w") as data:
+            data.write(str(high_score))
+
 
 # Check tail collision
 def check_tail_collision(snake_head):
